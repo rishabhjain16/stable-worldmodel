@@ -155,7 +155,9 @@ class RandomPolicy(BasePolicy):
         """Initialize the random policy.
 
         Args:
-            seed: Optional random seed for the action space.
+            seed: Random seed applied to the action space when the environment
+                is attached. If None, the action space uses its own default RNG,
+                making action sampling non-deterministic across runs.
             **kwargs: Additional configuration parameters.
         """
         super().__init__(**kwargs)
@@ -174,12 +176,12 @@ class RandomPolicy(BasePolicy):
         """
         return self.env.action_space.sample()
 
-    def set_seed(self, seed: int) -> None:
-        """Set the random seed for action sampling.
+    def set_env(self, env: Any) -> None:
+        super().set_env(env)
+        if self.seed is not None:
+            self._set_seed(self.seed)
 
-        Args:
-            seed: The seed value.
-        """
+    def _set_seed(self, seed: int) -> None:
         if self.env is not None:
             self.env.action_space.seed(seed)
 
