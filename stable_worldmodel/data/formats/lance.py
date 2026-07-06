@@ -134,11 +134,16 @@ class LanceDataset(Dataset):
         path: Either a ``.lance`` directory path or a database URI.
         table_name: Table inside the database; inferred from a ``.lance``
             path when omitted.
-        frameskip, num_steps, transform, keys_to_load, keys_to_cache,
-            keys_to_merge: standard ``Dataset`` knobs.
+        frameskip: Standard ``Dataset`` knob.
+        num_steps: Standard ``Dataset`` knob.
+        transform: Standard ``Dataset`` knob.
+        keys_to_load: Standard ``Dataset`` knob.
+        keys_to_cache: Standard ``Dataset`` knob.
+        keys_to_merge: Standard ``Dataset`` knob.
         image_columns: override image-column auto-detection (any
             ``pa.binary`` column is treated as encoded image by default).
-        episode_index_column, step_index_column: index column names.
+        episode_index_column: episode index column name.
+        step_index_column: step index column name.
         connect_kwargs: forwarded to :func:`lancedb.connect` (e.g. S3 creds).
     """
 

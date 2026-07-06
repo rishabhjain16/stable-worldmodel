@@ -23,7 +23,7 @@ A policy that uses a `Solver` (like CEM or MPPI) and a World Model to plan actio
 
 ```python
 from stable_worldmodel.policy import WorldModelPolicy, PlanConfig
-from stable_worldmodel.solver.random import RandomSolver
+from stable_worldmodel.planning import CEMSolver
 
 # 1. Define Planning Configuration
 cfg = PlanConfig(
@@ -33,7 +33,7 @@ cfg = PlanConfig(
 )
 
 # 2. Instantiate a Solver
-solver = RandomSolver() # Or CEMSolver, MPPI, etc.
+solver = CEMSolver(cost=world_model) # Or MPPISolver, GradientSolver, etc.
 
 # 3. Create the Policy
 policy = WorldModelPolicy(

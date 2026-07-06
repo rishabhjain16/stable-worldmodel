@@ -191,12 +191,12 @@ Load the model with `load_pretrained` and pass it to a policy to use it with the
 ```python
 from stable_worldmodel.wm.utils import load_pretrained
 from stable_worldmodel.policy import WorldModelPolicy, PlanConfig
-from stable_worldmodel.solver import CEMSolver
+from stable_worldmodel.planning import CEMSolver
 
 cost_model = load_pretrained('pusht_wm_v1')
 
 policy = WorldModelPolicy(
-    solver=CEMSolver(model=cost_model, num_samples=300),
+    solver=CEMSolver(cost=cost_model, num_samples=300),
     config=PlanConfig(horizon=10, receding_horizon=5),
 )
 

@@ -2,6 +2,7 @@ import json
 import os
 import urllib.request
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 import torch
@@ -9,6 +10,12 @@ from loguru import logger as logging
 from tqdm import tqdm
 
 from stable_worldmodel.utils import DEFAULT_CACHE_DIR, HF_BASE_URL
+
+
+if TYPE_CHECKING:
+    from stable_pretraining.data.transforms import WrapTorchTransform
+
+    from stable_worldmodel.data.dataset import Dataset
 
 
 def get_cache_dir(
@@ -37,7 +44,7 @@ def load_dataset(
     cache_dir: str = None,
     format: str | None = None,
     **kwargs,
-):
+) -> 'Dataset':
     """Resolve a dataset name to a local path and dispatch to the matching
     format reader from the registry.
 
@@ -59,7 +66,7 @@ def load_dataset(
         cache_dir: Root cache directory. Defaults to ``STABLEWM_HOME`` or
             ``~/.stable_worldmodel``.
         format: Explicit format name (skips detection).
-        **kwargs: Forwarded to the format's reader.
+        **kwargs (Any): Forwarded to the format's reader.
 
     Returns:
         A reader instance (typically a
@@ -250,13 +257,13 @@ def convert(
     explicitly.
 
     Args:
-        source: Path or identifier accepted by :func:`load_dataset`.
-        dest: Output path for the destination writer.
+        source (str | Path): Path or identifier accepted by :func:`load_dataset`.
+        dest (str | Path): Output path for the destination writer.
         source_format: Force a source format (skips detection).
         dest_format: Registered writer name (default ``'lance'``).
         cache_dir: Forwarded to the source loader for HF/local resolution.
         progress: Show a progress bar over episodes.
-        **dest_kwargs: Forwarded to the destination writer.
+        **dest_kwargs (Any): Forwarded to the destination writer.
 
     Example::
 
@@ -422,12 +429,13 @@ from stable_worldmodel.data.normalization import (  # noqa: E402
 
 
 def column_normalizer(
-    dataset, source: str, target: str, method: str = 'zscore'
-):
+    dataset: 'Dataset', source: str, target: str, method: str = 'zscore'
+) -> 'WrapTorchTransform':
     """Build a per-column normalizer :class:`WrapTorchTransform` from dataset stats.
 
     Args:
-        dataset: A dataset exposing ``get_col_data(col)`` returning an array.
+        dataset (Dataset): A dataset exposing ``get_col_data(col)`` returning
+            an array.
         source: Column name to read.
         target: Column name to write.
         method: One of ``'zscore'`` (default), ``'percentile'``, or ``'none'``.
